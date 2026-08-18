@@ -1,0 +1,5 @@
+==============================================================
+ MooN cluster node — headless / SSH password-auth enabled
+ This image ships with a DEFAULT, PUBLIC SSH password.
+ Do not expose this host beyond the internal test network.
+==============================================================

@@ -1,0 +1,13 @@
+[Unit]
+Description=MooN runtime payload (tmpfs, rootfs stays read-only)
+DefaultDependencies=no
+Before=moon-pkg-load.service
+
+[Mount]
+What=tmpfs
+Where=/opt/moon
+Type=tmpfs
+Options=mode=0755,nosuid
+
+[Install]
+WantedBy=local-fs.target

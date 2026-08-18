@@ -1,0 +1,11 @@
+[Unit]
+Description=Temporary Directory /tmp (MooN, always tmpfs since rootfs is read-only)
+
+[Mount]
+What=tmpfs
+Where=/tmp
+Type=tmpfs
+Options=mode=1777,strictatime,nosuid,nodev,size=10%
+
+[Install]
+WantedBy=local-fs.target

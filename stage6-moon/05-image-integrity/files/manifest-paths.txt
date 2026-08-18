@@ -1,0 +1,26 @@
+# One path per line, relative to the rootfs root (no leading /).
+# Extend this list with any further MooN-critical file; it is read at
+# image-build time (05-image-integrity) to produce the signed manifest,
+# and again at every boot to re-check the running system against it.
+#
+# Deliberately NOT tracked here: /etc/fstab and /boot/firmware/cmdline.txt.
+# Both still contain the literal "ROOTDEV" placeholder when this stage
+# runs; pi-gen's own export-image/04-set-partuuid step substitutes the
+# real PARTUUID into them AFTER all stages (including this one) have
+# already finished. Tracking them here would hash the pre-substitution
+# content and make the boot-time check fail on every image, every time.
+#
+# Also deliberately NOT tracked: /etc/systemd/network/10-eth0-static.network.
+# tools/moon-deploy.sh rewrites this per node after the image is built
+# (different IP per Pi) -- it is an intentionally mutable per-node
+# parameter, not a build-time security invariant, so it stays outside
+# the signed manifest on purpose.
+usr/local/sbin/moon-pkg-load.sh
+usr/local/sbin/moon-disable-usb.sh
+etc/systemd/system/moon-pkg-load.service
+etc/systemd/system/moon-node.service
+etc/systemd/system/opt-moon.mount
+etc/systemd/system/moon-disable-usb.service
+etc/ssh/sshd_config
+etc/moon/moon-signing-pub.pem
+boot/firmware/config.txt

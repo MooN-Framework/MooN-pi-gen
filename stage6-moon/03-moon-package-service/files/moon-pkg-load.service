@@ -1,0 +1,16 @@
+[Unit]
+Description=MooN: verify and load signed package from /boot
+DefaultDependencies=no
+Requires=opt-moon.mount
+After=opt-moon.mount moon-integrity.service network-pre.target
+Requires=moon-integrity.service
+Before=moon-node.service
+ConditionPathExists=/boot/firmware/moon-package.moonpkg
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/moon-pkg-load.sh
+
+[Install]
+WantedBy=multi-user.target

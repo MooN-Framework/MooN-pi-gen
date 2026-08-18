@@ -1,0 +1,13 @@
+[Unit]
+Description=MooN: verify critical files against signed rootfs manifest
+DefaultDependencies=no
+After=local-fs.target
+Before=moon-pkg-load.service sysinit.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/moon-integrity-check.sh
+
+[Install]
+WantedBy=sysinit.target

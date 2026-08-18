@@ -141,9 +141,21 @@ time ${DOCKER} run \
   $DOCKER_CMDLINE_POST \
   pi-gen \
   bash -e -o pipefail -c "
-    dpkg-reconfigure qemu-user-binfmt &&
-    # binfmt_misc is sometimes not mounted with debian trixie image
-    (mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc || true) &&
+    # NOTE: do NOT unconditionally 'mount binfmt_misc -t binfmt_misc ...'
+    # here. If binfmt_misc is already visible inside the container
+    # (inherited from the host via --privileged, which is the normal
+    # case), this mount creates a fresh, EMPTY per-namespace instance
+    # and silently wipes out the host-side qemu-aarch64 registration --
+    # that is what was causing 'arm64: not supported' even though
+    # registration on the host reported success. Only mount/register if
+    # binfmt_misc is genuinely empty or missing here.
+    if [ ! -d /proc/sys/fs/binfmt_misc ] || [ -z \"\$(ls -A /proc/sys/fs/binfmt_misc 2>/dev/null)\" ]; then
+      echo 'binfmt_misc empty inside container, mounting + registering locally'
+      mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
+      dpkg-reconfigure qemu-user-binfmt
+    else
+      echo 'binfmt_misc already populated inside container (inherited from host), leaving it alone'
+    fi
     cd /pi-gen; ./build.sh ${BUILD_OPTS} &&
     rsync -av work/*/build.log deploy/
   " &

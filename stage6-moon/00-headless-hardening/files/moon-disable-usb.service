@@ -1,0 +1,13 @@
+[Unit]
+Description=MooN: deauthorize all USB ports
+DefaultDependencies=no
+After=sysinit.target
+Before=basic.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/moon-disable-usb.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target

@@ -1,0 +1,9 @@
+[Match]
+Name=__MOON_ETH_IFACE__
+
+[Network]
+Address=__MOON_ETH_ADDRESS__
+__MOON_GATEWAY_LINE__
+__MOON_DNS_LINE__
+IPv6AcceptRA=no
+LinkLocalAddressing=no

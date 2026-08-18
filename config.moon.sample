@@ -1,0 +1,37 @@
+# Copy this file to ./config and adjust, then run ./build.sh (or
+# ./build-docker.sh). See README.md (top-level) for the generic pi-gen
+# variables, and stage6-moon/README.md for the MooN-specific ones.
+
+IMG_NAME="moon-node"
+RELEASE=trixie
+
+# Only build Raspberry Pi OS Lite (stage0-2) plus the MooN stage.
+# Skips the desktop/full stages (stage3-5) entirely.
+STAGE_LIST="stage0 stage1 stage2 stage6-moon"
+
+# --- first user / SSH -------------------------------------------------
+FIRST_USER_NAME=moon
+FIRST_USER_PASS=123
+ENABLE_SSH=1
+DISABLE_FIRST_BOOT_USER_RENAME=1
+# Required for tools/moon-deploy.sh: it runs sudo non-interactively over
+# SSH (remount rw/ro, restart services, reboot) and cannot answer a
+# password prompt there.
+PASSWORDLESS_SUDO=1
+
+TARGET_HOSTNAME=moon-node
+
+# --- network (stage6-moon/01-static-network) --------------------------
+MOON_ETH_IFACE=eth0
+MOON_ETH_ADDRESS=192.168.10.10/24
+MOON_ETH_GATEWAY=
+MOON_ETH_DNS=
+
+# --- signing keys (see tools/gen-moon-keys.sh) -------------------------
+# Public key: embedded in the image, used for both package verification
+# (stage6-moon/03) and rootfs-manifest verification (stage6-moon/04).
+MOON_SIGNING_PUBKEY=./keys/moon-signing-pub.pem
+# Private key: only read on the build host, only during stage6-moon/04,
+# to sign the rootfs manifest. Never copied into the image. Keep it
+# offline between builds.
+MOON_SIGNING_PRIVKEY=./keys/moon-signing-key.pem

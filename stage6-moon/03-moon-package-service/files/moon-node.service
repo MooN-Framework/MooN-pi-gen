@@ -1,0 +1,17 @@
+[Unit]
+Description=MooN node process
+After=moon-pkg-load.service
+Requires=moon-pkg-load.service
+ConditionPathExists=/run/moon/package-loaded
+
+[Service]
+Type=simple
+ExecStart=/opt/moon/bin/node --config /opt/moon/config/node.toml
+Restart=on-failure
+RestartSec=2
+# Rootfs is read-only, all writable state for the node lives in tmpfs.
+ProtectSystem=strict
+ReadWritePaths=/opt/moon /run/moon
+
+[Install]
+WantedBy=multi-user.target
