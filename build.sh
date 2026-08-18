@@ -157,7 +157,9 @@ export BASE_DIR
 
 if [ -f config ]; then
 	# shellcheck disable=SC1091
+	set -a
 	source config
+	set +a
 fi
 
 while getopts "c:" flag
@@ -166,7 +168,9 @@ do
 		c)
 			EXTRA_CONFIG="$OPTARG"
 			# shellcheck disable=SC1090
+			set -a
 			source "$EXTRA_CONFIG"
+			set +a
 			;;
 		*)
 			;;

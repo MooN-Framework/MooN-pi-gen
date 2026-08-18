@@ -53,6 +53,13 @@ on_chroot <<- EOF
 
 	# Enable static networking
 	systemctl enable systemd-networkd.service
-	systemctl enable systemd-resolved.service
-	ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 EOF
+
+# No systemd-resolved here on purpose: it's a separate package that
+# raspios-lite doesn't pull in by default, and this cluster talks
+# node-to-node by static IP -- no name resolution needed. If
+# MOON_ETH_DNS is set anyway, write a plain static /etc/resolv.conf
+# instead of depending on resolved's stub resolver.
+if [ -n "${MOON_ETH_DNS}" ]; then
+	echo "nameserver ${MOON_ETH_DNS}" > "${ROOTFS_DIR}/etc/resolv.conf"
+fi

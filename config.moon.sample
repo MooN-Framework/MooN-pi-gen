@@ -23,8 +23,8 @@ TARGET_HOSTNAME=moon-node
 
 # --- network (stage6-moon/01-static-network) --------------------------
 MOON_ETH_IFACE=eth0
-MOON_ETH_ADDRESS=192.168.10.10/24
-MOON_ETH_GATEWAY=
+MOON_ETH_ADDRESS=192.168.1.22/24
+MOON_ETH_GATEWAY=192.168.1.1/24
 MOON_ETH_DNS=
 
 # --- signing keys (see tools/gen-moon-keys.sh) -------------------------
