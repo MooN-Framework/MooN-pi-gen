@@ -41,3 +41,22 @@ install -m 755 files/moon-disable-usb.sh \
 on_chroot <<- EOF
 	systemctl enable moon-disable-usb.service
 EOF
+
+# --- cloud-init: not used, and actively fails on a read-only rootfs ---
+# cloud-init writes its state to /var/lib/cloud, which is part of the
+# permanently read-only root set up in 04-readonly-rootfs -- every
+# cloud-init stage fails at boot as a result (harmless, since we never
+# rely on it, but noisy in `systemctl --failed`). Nothing here needs
+# cloud provisioning: network is static (01-static-network), and
+# software delivery goes through moon-pkg-load.service, not cloud-init
+# user-data. Purge it outright rather than just masking it, so the
+# three placeholder files stage2/04-cloud-init drops on
+# /boot/firmware (meta-data, user-data, network-config) don't linger
+# either.
+on_chroot <<- EOF
+	apt-get purge -y cloud-init rpi-cloud-init-mods 2>/dev/null || true
+	apt-get autoremove -y 2>/dev/null || true
+EOF
+rm -f "${ROOTFS_DIR}/boot/firmware/meta-data" \
+	"${ROOTFS_DIR}/boot/firmware/user-data" \
+	"${ROOTFS_DIR}/boot/firmware/network-config"
