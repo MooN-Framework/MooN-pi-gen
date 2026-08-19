@@ -22,4 +22,17 @@ sed -i -Ee \
 	's/^#?[[:blank:]]*PermitRootLogin[[:blank:]]*.*$/PermitRootLogin no/' \
 	"${SSHD_CONFIG}"
 
+# UseDNS: sshd otherwise does a reverse-DNS lookup of the connecting
+# client for logging (PAM/audit), and this node has no DNS server
+# configured (see 01-static-network) -- without this, every login
+# stalls for the resolver timeout (~20-30s) before falling back,
+# even though the connection/auth itself is fast. Confirmed on real
+# hardware: this was the actual cause of the slow-SSH-connect issue.
+sed -i -Ee \
+	's/^#?[[:blank:]]*UseDNS[[:blank:]]*(yes|no)[[:blank:]]*$/UseDNS no/' \
+	"${SSHD_CONFIG}"
+if ! grep -q '^UseDNS no' "${SSHD_CONFIG}"; then
+	echo "UseDNS no" >> "${SSHD_CONFIG}"
+fi
+
 install -m 644 files/moon-motd "${ROOTFS_DIR}/etc/motd"
