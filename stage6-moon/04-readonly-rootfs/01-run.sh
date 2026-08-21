@@ -54,6 +54,8 @@ sed -i 's/[[:space:]]*\<resize\>//' "${CMDLINE}"
 install -m 644 files/tmp.mount     "${ROOTFS_DIR}/etc/systemd/system/tmp.mount"
 install -m 644 files/var-log.mount "${ROOTFS_DIR}/etc/systemd/system/var-log.mount"
 install -m 644 files/var-tmp.mount "${ROOTFS_DIR}/etc/systemd/system/var-tmp.mount"
+install -m 644 files/var-lib.mount "${ROOTFS_DIR}/etc/systemd/system/var-lib.mount"
+install -m 644 files/var-cache.mount "${ROOTFS_DIR}/etc/systemd/system/var-cache.mount"
 
 install -d -m 755 "${ROOTFS_DIR}/etc/systemd/journald.conf.d"
 install -m 644 files/journald-volatile.conf \
@@ -66,6 +68,8 @@ on_chroot <<- EOF
 	systemctl enable tmp.mount
 	systemctl enable var-log.mount
 	systemctl enable var-tmp.mount
+	systemctl enable var-lib.mount
+	systemctl enable var-cache.mount
 EOF
 
 # --- pre-bake what would otherwise need to write to /etc on first boot -

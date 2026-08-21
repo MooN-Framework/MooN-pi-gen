@@ -1,14 +1,14 @@
 [Unit]
 Description=MooN node process
-After=moon-pkg-load.service
+After=moon-pkg-load.service network-online.target
 Requires=moon-pkg-load.service
+Wants=network-online.target
 ConditionPathExists=/run/moon/package-loaded
 
 [Service]
 Type=simple
 ExecStart=/opt/moon/bin/node --config /opt/moon/config/node.toml
-Restart=on-failure
-RestartSec=2
+Restart=no
 # Rootfs is read-only, all writable state for the node lives in tmpfs.
 ProtectSystem=strict
 ReadWritePaths=/opt/moon /run/moon

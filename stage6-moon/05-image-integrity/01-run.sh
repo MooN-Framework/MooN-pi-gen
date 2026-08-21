@@ -20,6 +20,13 @@ if [ -z "${MOON_SIGNING_PRIVKEY}" ]; then
 	echo "moon: MOON_SIGNING_PRIVKEY not set in config (see tools/gen-moon-keys.sh)" >&2
 	exit 1
 fi
+# Same relative-path caveat as 03-moon-package-service: resolve against
+# BASE_DIR (pi-gen repo root), not the current directory, since pi-gen
+# pushd's into this stage's own subdirectory before running this script.
+case "${MOON_SIGNING_PRIVKEY}" in
+	/*) : ;;
+	*) MOON_SIGNING_PRIVKEY="${BASE_DIR}/${MOON_SIGNING_PRIVKEY}" ;;
+esac
 if [ ! -f "${MOON_SIGNING_PRIVKEY}" ]; then
 	echo "moon: MOON_SIGNING_PRIVKEY (${MOON_SIGNING_PRIVKEY}) not found" >&2
 	exit 1

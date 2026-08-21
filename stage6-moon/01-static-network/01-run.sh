@@ -53,6 +53,11 @@ on_chroot <<- EOF
 
 	# Enable static networking
 	systemctl enable systemd-networkd.service
+	# moon-node.service waits on network-online.target (see
+	# stage6-moon/03-moon-package-service) to avoid a boot-time race
+	# against this interface not being configured yet -- that target is
+	# a no-op without this unit enabled.
+	systemctl enable systemd-networkd-wait-online.service
 EOF
 
 # No systemd-resolved here on purpose: it's a separate package that

@@ -12,6 +12,15 @@ if [ -z "${MOON_SIGNING_PUBKEY}" ]; then
 	echo "moon: MOON_SIGNING_PUBKEY not set in config (see tools/gen-moon-keys.sh)" >&2
 	exit 1
 fi
+# Resolve a relative path against BASE_DIR (the pi-gen repo root, always
+# exported by build.sh) rather than the current directory -- pi-gen
+# pushd's into this stage's own subdirectory before running this script,
+# so a relative path from `config` would otherwise resolve to the wrong
+# place.
+case "${MOON_SIGNING_PUBKEY}" in
+	/*) : ;;
+	*) MOON_SIGNING_PUBKEY="${BASE_DIR}/${MOON_SIGNING_PUBKEY}" ;;
+esac
 if [ ! -f "${MOON_SIGNING_PUBKEY}" ]; then
 	echo "moon: MOON_SIGNING_PUBKEY (${MOON_SIGNING_PUBKEY}) not found" >&2
 	exit 1

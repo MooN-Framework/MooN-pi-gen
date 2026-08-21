@@ -1,0 +1,13 @@
+[Unit]
+Description=MooN: tmpfs for /var/cache (rootfs is read-only)
+DefaultDependencies=no
+Before=local-fs.target
+
+[Mount]
+What=tmpfs
+Where=/var/cache
+Type=tmpfs
+Options=mode=0755,nosuid,nodev,size=5%
+
+[Install]
+WantedBy=local-fs.target

@@ -107,8 +107,12 @@ esac
 
 # Check if qemu-aarch64 and /proc/sys/fs/binfmt_misc are present
 if [[ "${binfmt_misc_required}" == "1" ]]; then
-  if ! qemu_arm=$(which qemu-aarch64) ; then
-    echo "qemu-aarch64 not found (please install qemu-user-binfmt)"
+  # Debian/Ubuntu ship a plain "qemu-aarch64" binary; Arch-based distros
+  # (e.g. CachyOS) only provide "qemu-aarch64-static" via the
+  # qemu-user-static package -- fall back to that name so this check
+  # doesn't fail on a perfectly working binfmt_misc setup.
+  if ! qemu_arm=$(which qemu-aarch64 2>/dev/null) && ! qemu_arm=$(which qemu-aarch64-static 2>/dev/null) ; then
+    echo "qemu-aarch64 not found (install qemu-user-binfmt on Debian/Ubuntu, or qemu-user-static + qemu-user-static-binfmt on Arch)"
     exit 1
   fi
   if [ ! -f /proc/sys/fs/binfmt_misc/register ]; then
