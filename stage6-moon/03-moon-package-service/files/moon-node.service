@@ -7,7 +7,8 @@ ConditionPathExists=/run/moon/package-loaded
 
 [Service]
 Type=simple
-ExecStart=/opt/moon/bin/node --config /opt/moon/config/node.toml
+ExecStartPre=/bin/mkdir -p /opt/moon/logs
+ExecStart=/opt/moon/bin/node --config /opt/moon/config/node.toml --log-dir /opt/moon/logs/
 Restart=no
 # Rootfs is read-only, all writable state for the node lives in tmpfs.
 ProtectSystem=strict
