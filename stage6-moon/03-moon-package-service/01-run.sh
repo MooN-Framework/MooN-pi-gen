@@ -2,11 +2,19 @@
 #
 # MooN package service
 #
+# Installs the package loader (moon-pkg-load.sh + .service), the tmpfs
+# mount for the payload (/opt/moon) and the node service. The loader
+# verifies /boot/firmware/moon-package.moonpkg at every boot and only
+# then lets moon-node.service start. See docs/stage6-moon.md and
+# docs/package-format.md.
+#
 # Requires MOON_SIGNING_PUBKEY (set in the pi-gen `config` file) to point
-# to an ed25519 public key in PEM form on the build host. Generate a
-# keypair with tools/gen-moon-keys.sh; keep the private key OFF the build
-# host / out of version control, it is only needed by tools/build-moon-package.sh
-# when signing packages for deployment.
+# to an ed25519 public key in PEM form on the build host (absolute, or
+# relative to the repository root). Generate a keypair with
+# tools/gen-moon-keys.sh. Only the public key is copied into the image.
+# The private key is needed on the build host by 05-image-integrity and
+# by tools/build-moon-package.sh, never in the image and never in version
+# control.
 
 if [ -z "${MOON_SIGNING_PUBKEY}" ]; then
 	echo "moon: MOON_SIGNING_PUBKEY not set in config (see tools/gen-moon-keys.sh)" >&2

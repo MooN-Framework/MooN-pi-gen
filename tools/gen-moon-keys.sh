@@ -5,9 +5,11 @@
 #
 # Usage: tools/gen-moon-keys.sh [output-dir]
 #
-# Keep moon-signing-key.pem OFFLINE / out of version control. Only
-# moon-signing-pub.pem is meant to end up on the build host / in the
-# image.
+# moon-signing-pub.pem is copied into the image (MOON_SIGNING_PUBKEY).
+# moon-signing-key.pem (MOON_SIGNING_PRIVKEY) is only needed on the build
+# host: by stage6-moon/05-image-integrity, tools/build-moon-package.sh
+# and tools/moon-deploy.sh --signing-key. Keep it offline between builds
+# and out of version control. It never goes into the image.
 
 OUT_DIR="${1:-./keys}"
 mkdir -p "${OUT_DIR}"

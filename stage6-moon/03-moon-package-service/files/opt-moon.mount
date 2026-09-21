@@ -1,3 +1,5 @@
+# Installed by stage6-moon/03-moon-package-service. RAM-backed target for
+# the package payload, emptied on every boot.
 [Unit]
 Description=MooN runtime payload (tmpfs, rootfs stays read-only)
 DefaultDependencies=no

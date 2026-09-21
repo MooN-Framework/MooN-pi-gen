@@ -9,6 +9,8 @@
 #   than blacklisting host controller kernel modules, which can also
 #   break other on-SoC peripherals)
 #
+# - purges cloud-init (unused, and it fails on the read-only rootfs)
+#
 # Ethernet, SD/eMMC boot storage and the Pi's serial console are left
 # untouched.
 

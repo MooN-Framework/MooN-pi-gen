@@ -1,3 +1,5 @@
+# Installed by stage6-moon/04-readonly-rootfs. Writable, non-persistent
+# path on top of the read-only rootfs.
 [Unit]
 Description=MooN: tmpfs for /var/tmp (rootfs is read-only)
 DefaultDependencies=no

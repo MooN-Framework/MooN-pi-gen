@@ -1,3 +1,5 @@
+# Installed by stage6-moon/00-headless-hardening. Runs once per boot and
+# deauthorizes all USB root hubs (moon-disable-usb.sh).
 [Unit]
 Description=MooN: deauthorize all USB ports
 DefaultDependencies=no

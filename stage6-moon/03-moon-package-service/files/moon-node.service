@@ -1,3 +1,8 @@
+# Installed by stage6-moon/03-moon-package-service. Starts the MooN node
+# from the verified payload in /opt/moon. Only runs if moon-pkg-load.service
+# succeeded (/run/moon/package-loaded). Restart=no is intentional.
+# Tracked by the rootfs integrity manifest, update it on a running node
+# with tools/moon-deploy.sh --node-unit ... --signing-key ...
 [Unit]
 Description=MooN node process
 After=moon-pkg-load.service network-online.target

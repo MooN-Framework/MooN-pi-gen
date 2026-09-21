@@ -2,9 +2,15 @@
 #
 # MooN read-only rootfs
 #
-# Rootfs is mounted `ro` permanently. Only /boot/firmware (where deploy
-# scripts drop .moonpkg files) and /opt/moon (tmpfs, filled fresh by
-# moon-pkg-load.service every boot) are ever writable at runtime.
+# Rootfs is mounted `ro` permanently. Writable at runtime are only
+# /boot/firmware (VFAT, where deploy scripts drop .moonpkg files),
+# /opt/moon (tmpfs, filled fresh by moon-pkg-load.service every boot,
+# see 03-moon-package-service) and the tmpfs mounts installed here:
+# /tmp, /var/log, /var/tmp, /var/lib, /var/cache. /var/lib and
+# /var/cache are mounted as a whole because every unit with
+# StateDirectory=/CacheDirectory= creates its directory on start and
+# would otherwise fail on the read-only root. /home and /root stay on
+# the read-only rootfs (known limitation, see docs/architecture.md).
 # This is a plain mount-option + tmpfs-overlay setup, not dm-verity --
 # it stops accidental/ordinary writes, it does not cryptographically
 # verify block contents (that is what stage 05-image-integrity's signed

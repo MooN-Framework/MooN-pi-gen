@@ -1,3 +1,5 @@
+# Installed by stage6-moon/04-readonly-rootfs. Writable, non-persistent
+# path on top of the read-only rootfs.
 [Unit]
 Description=Temporary Directory /tmp (MooN, always tmpfs since rootfs is read-only)
 

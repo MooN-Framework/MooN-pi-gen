@@ -1,3 +1,5 @@
+# Rendered by stage6-moon/01-static-network. Keep in sync with the
+# generator in tools/moon-deploy.sh (--ip).
 [Match]
 Name=__MOON_ETH_IFACE__
 

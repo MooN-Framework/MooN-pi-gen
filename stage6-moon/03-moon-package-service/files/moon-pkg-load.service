@@ -1,3 +1,6 @@
+# Installed by stage6-moon/03-moon-package-service. Verifies and extracts
+# /boot/firmware/moon-package.moonpkg into /opt/moon. Requires a passed
+# rootfs integrity check (moon-integrity.service).
 [Unit]
 Description=MooN: verify and load signed package from /boot
 DefaultDependencies=no
