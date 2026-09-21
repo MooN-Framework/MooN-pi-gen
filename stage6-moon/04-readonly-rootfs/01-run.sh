@@ -27,11 +27,20 @@ FSTAB="${ROOTFS_DIR}/etc/fstab"
 # This stage runs before export-image/04-set-partuuid substitutes the
 # ROOTDEV placeholder with the real PARTUUID, so the root line still
 # reads literally "ROOTDEV  /  ext4  defaults,noatime  0  1" here.
-if ! grep -q '^ROOTDEV[[:space:]]\+/[[:space:]]\+ext4[[:space:]]\+defaults,noatime' "${FSTAB}"; then
+#
+# Idempotency: on an incremental rebuild (work/ not cleaned), this stage
+# may already have run against this same rootfs, in which case the line
+# already reads "ro,noatime" -- that is not an unexpected format, it is
+# just this script's own prior output, so treat it as a no-op rather
+# than aborting.
+if grep -q '^ROOTDEV[[:space:]]\+/[[:space:]]\+ext4[[:space:]]\+ro,noatime' "${FSTAB}"; then
+	echo "moon: ${FSTAB} root entry already ro,noatime, skipping (stale work dir rerun)" >&2
+elif grep -q '^ROOTDEV[[:space:]]\+/[[:space:]]\+ext4[[:space:]]\+defaults,noatime' "${FSTAB}"; then
+	sed -i 's|^\(ROOTDEV[[:space:]]\+/[[:space:]]\+ext4[[:space:]]\+\)defaults,noatime|\1ro,noatime|' "${FSTAB}"
+else
 	echo "moon: ${FSTAB} root entry not in the expected format, aborting rather than guessing" >&2
 	exit 1
 fi
-sed -i 's|^\(ROOTDEV[[:space:]]\+/[[:space:]]\+ext4[[:space:]]\+\)defaults,noatime|\1ro,noatime|' "${FSTAB}"
 grep -q '^ROOTDEV[[:space:]]\+/[[:space:]]\+ext4[[:space:]]\+ro,noatime' "${FSTAB}" \
 	|| { echo "moon: failed to set root fstab entry to ro" >&2; exit 1; }
 

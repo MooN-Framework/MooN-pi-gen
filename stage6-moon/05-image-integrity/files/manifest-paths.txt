@@ -24,3 +24,5 @@ etc/systemd/system/moon-disable-usb.service
 etc/ssh/sshd_config
 etc/moon/moon-signing-pub.pem
 boot/firmware/config.txt
+boot/firmware/kernel8.img
+boot/firmware/initramfs8
